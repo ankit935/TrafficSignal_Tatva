@@ -19,5 +19,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 30,
   },
+  signal: {
+    width: 150,
+    height: 400,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  signalClockwise: {
+    transform: [{rotate: '0deg'}],
+  },
+
+  signalAnticlockwise: {
+    transform: [{rotate: '180deg'}],
+  },
+  signalUpDown: {
+    transform: [{rotate: '-90deg'}],
+  },
 });
 export default styles;

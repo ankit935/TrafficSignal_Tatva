@@ -64,6 +64,7 @@ export default function Home() {
           return (
             <SettingOptions
               onPress={() => {
+                setRoation(item.title);
                 setSignalRotationVisible(false);
                 setVisible(false);
                 handleRotation(item.title);
@@ -114,42 +115,82 @@ export default function Home() {
   };
 
   const handleRotation = rotate => {
+    console.log('>>>>', rotate);
     if (rotate === 'ClockWise') {
+      setTimer(
+        setInterval(() => {
+          switch (signalColor) {
+            case 'red':
+              setSignalColor('red');
+              break;
+            case 'green':
+              setSignalColor('green');
+              break;
+          }
+        }, duration * 1000),
+      );
     } else if (rotate === 'Anti-ClockWise') {
+      setTimer(
+        setInterval(() => {
+          switch (signalColor) {
+            case 'red':
+              setSignalColor('green');
+              break;
+            case 'green':
+              setSignalColor('red');
+              break;
+          }
+        }, duration * 1000),
+      );
+    } else if (rotate === 'Up-To-Down') {
+      return [styles.signal, styles.signalUpDown];
+    } else {
+      return [styles.signal, styles.signalClockwise];
     }
-    setRoation(rotate);
   };
 
   return (
     <View style={styles.container}>
       <Header onSettingPress={() => setVisible(true)} />
       <View style={styles.childContainer}>
-        <View style={styles.upSignal}>
-          <Box
-            style={[signalColor]}
-            boxTitle={'AMB'}
-            onPress={handleAmbPress}
-          />
-          <Box boxTitle={'A'} bgColor={signalColor} />
-        </View>
-        <View style={styles.leftRightSignalCon}>
-          <View style={{flexDirection: 'row'}}>
+        <View>
+          <View style={styles.upSignal}>
             <Box boxTitle={'AMB'} onPress={handleAmbPress} />
-            <Box boxTitle={'D'} bgColor={signalColor} />
+            <Box
+              boxTitle={'A'}
+              bgColor={signalColor !== 'red' ? 'red' : 'green'}
+            />
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <Box boxTitle={'B'} bgColor={signalColor} />
+          <View style={styles.leftRightSignalCon}>
+            <View style={{flexDirection: 'row'}}>
+              <Box boxTitle={'AMB'} onPress={handleAmbPress} />
+              <Box
+                boxTitle={'D'}
+                bgColor={signalColor === 'red' ? 'red' : 'green'}
+              />
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Box
+                boxTitle={'B'}
+                bgColor={signalColor === 'red' ? 'red' : 'green'}
+              />
+              <Box boxTitle={'AMB'} onPress={handleAmbPress} />
+            </View>
+          </View>
+          <View style={styles.upSignal}>
+            <Box
+              boxTitle={'C'}
+              bgColor={signalColor !== 'red' ? 'red' : 'green'}
+            />
             <Box boxTitle={'AMB'} onPress={handleAmbPress} />
           </View>
-        </View>
-        <View style={styles.upSignal}>
-          <Box boxTitle={'C'} bgColor={signalColor} />
-          <Box boxTitle={'AMB'} onPress={handleAmbPress} />
         </View>
       </View>
-      <Modal animationType="slide" visible={visible}>
+      <Modal
+        onRequestClose={() => setVisible(false)}
+        animationType="slide"
+        visible={visible}>
         <View style={{flex: 1}}>
-          <Text onPress={() => setVisible(false)}>Modal</Text>
           <SettingOptions
             title={'Time Duration'}
             onPress={() => setTimeDurationVisible(true)}
@@ -160,10 +201,16 @@ export default function Home() {
           />
         </View>
       </Modal>
-      <Modal animationType="fade" visible={timeDurationVisible}>
+      <Modal
+        onRequestClose={() => setTimeDurationVisible(false)}
+        animationType="fade"
+        visible={timeDurationVisible}>
         {renderTimeDuration()}
       </Modal>
-      <Modal animationType="fade" visible={signalRotation}>
+      <Modal
+        onRequestClose={() => setSignalRotationVisible(false)}
+        animationType="fade"
+        visible={signalRotation}>
         {renderSignalRotation()}
       </Modal>
     </View>
